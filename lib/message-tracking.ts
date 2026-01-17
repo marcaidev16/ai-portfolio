@@ -5,12 +5,6 @@ const redis = process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_RE
     ? Redis.fromEnv()
     : null;
 
-// Daily message limits
-export const MESSAGE_LIMITS = {
-    GUEST: 3,
-    AUTHENTICATED: 10,
-} as const;
-
 interface MessageCount {
     count: number;
     resetAt: string; // ISO string
@@ -54,7 +48,8 @@ export async function getMessageCount(
  */
 export async function incrementMessageCount(
     identifier: string,
-    isGuest: boolean
+    isGuest: boolean,
+    limit?: number
 ): Promise<MessageCount> {
     if (!redis) {
         // No Redis configured - allow all messages
@@ -86,10 +81,13 @@ export async function incrementMessageCount(
  */
 export async function hasRemainingMessages(
     identifier: string,
-    isGuest: boolean
+    isGuest: boolean,
+    customLimit?: number
 ): Promise<{ allowed: boolean; remaining: number; limit: number }> {
     const { count } = await getMessageCount(identifier, isGuest);
-    const limit = isGuest ? MESSAGE_LIMITS.GUEST : MESSAGE_LIMITS.AUTHENTICATED;
+
+    // Use custom limit if provided, otherwise use defaults
+    const limit = customLimit ?? (isGuest ? 3 : 5);
     const remaining = Math.max(0, limit - count);
 
     return {

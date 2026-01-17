@@ -38,9 +38,52 @@ export default async function RootLayout({
   return (
     <ClerkProvider
       appearance={{
+        baseTheme: undefined,
+        variables: {
+          colorPrimary: '#7c3aed',
+          colorBackground: '#09090b',
+          colorInputBackground: 'transparent',
+          colorInputText: '#ffffff',
+          colorText: '#ffffff',
+          colorTextSecondary: '#a1a1aa',
+          borderRadius: '0.5rem',
+          fontFamily: 'var(--font-geist-sans)',
+        },
         elements: {
-          // Deshabilitar el componente de sign in automático
+          // Card & Layout
+          card: "bg-black/40 backdrop-blur-md border border-white/5 shadow-2xl rounded-2xl",
           rootBox: "clerk-root-box",
+          navbar: "hidden", // Hide sidebar in profile for cleaner look
+          navbarMobileMenuRow: "hidden",
+
+          // Headers
+          headerTitle: "text-white font-medium tracking-tight",
+          headerSubtitle: "text-zinc-400 font-light",
+
+          // Inputs
+          formFieldLabel: "text-zinc-400 font-medium text-xs uppercase tracking-wider mb-1.5",
+          formFieldInput: "bg-white/5 border border-white/10 text-white transition-all focus:border-white/20 focus:bg-white/10 hover:bg-white/10 outline-none shadow-none focus:shadow-none placeholder:text-zinc-600 rounded-lg",
+
+          // Buttons
+          formButtonPrimary: "bg-white text-black hover:bg-zinc-200 transition-all font-medium rounded-lg shadow-none",
+          socialButtonsBlockButton: "bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-lg transition-all",
+          socialButtonsBlockButtonText: "font-normal text-zinc-300",
+
+          // Links & Footer
+          footerActionLink: "text-white hover:text-zinc-300 font-normal underline-offset-4",
+          footer: "hidden", // Hide default clerk footer for cleaner look
+
+          // Profile specific
+          identityPreviewText: "text-white font-medium",
+          identityPreviewEditButton: "text-zinc-400 hover:text-white transition-colors",
+
+          // Alerts/Badges
+          alert: "bg-white/5 border border-white/10 text-zinc-300",
+          badge: "bg-white/10 text-white border border-white/10",
+        },
+        layout: {
+          socialButtonsPlacement: 'bottom',
+          logoPlacement: 'none', // Cleaner without logo
         },
       }}
       signInFallbackRedirectUrl="/"

@@ -5,6 +5,7 @@ import { LayoutTextFlip } from "@/components/ui/layout-text-flip";
 import { urlFor } from "@/sanity/lib/image";
 import { sanityFetch } from "@/sanity/lib/live";
 import { ProfileImage } from "./ProfileImage";
+import { Mail, MapPin, CheckCircle2 } from "lucide-react";
 
 const HERO_QUERY = defineQuery(`*[_id == "singleton-profile"][0]{
   firstName,
@@ -90,23 +91,29 @@ export async function HeroSection() {
                 </div>
               )}
 
-              <div className="flex flex-wrap gap-4 @md/hero:gap-6 pt-4 text-xs @md/hero:text-sm text-muted-foreground">
+              <div className="flex flex-wrap gap-4 pt-6 text-sm text-muted-foreground/80">
                 {profile.email && (
-                  <div className="flex items-center gap-2">
-                    <span>📧</span>
+                  <a
+                    href={`mailto:${profile.email}`}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/5 hover:bg-primary/10 border border-primary/10 hover:border-primary/20 transition-all text-muted-foreground hover:text-foreground group"
+                  >
+                    <Mail className="w-3.5 h-3.5 group-hover:text-primary transition-colors" />
                     <span className="truncate">{profile.email}</span>
-                  </div>
+                  </a>
                 )}
                 {profile.location && (
-                  <div className="flex items-center gap-2">
-                    <span>📍</span>
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+                    <MapPin className="w-3.5 h-3.5" />
                     <span>{profile.location}</span>
                   </div>
                 )}
                 {profile.availability && (
-                  <div className="flex items-center gap-2">
-                    <span>✅</span>
-                    <span>{profile.availability}</span>
+                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500">
+                    <div className="relative flex items-center justify-center">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+                    </div>
+                    <span className="font-medium">{profile.availability}</span>
                   </div>
                 )}
               </div>

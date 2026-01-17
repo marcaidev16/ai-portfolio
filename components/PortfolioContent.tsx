@@ -1,12 +1,13 @@
+import { JobFitAssessment } from "@/components/sections/JobFitAssessment";
 import {
   AboutSection,
   AchievementsSection,
+  AutomationsLibrary,
   BlogSection,
   CertificationsSection,
   ContactSection,
   EducationSection,
   ExperienceSection,
-  FitAssessmentSection,
   HeroSection,
   ProjectsSection,
   SkillsSection,
@@ -16,12 +17,13 @@ async function PortfolioContent() {
   return (
     <>
       <HeroSection />
+      <JobFitAssessment />
       <AboutSection />
       <SkillsSection />
       <ExperienceSection />
       <EducationSection />
       <ProjectsSection />
-      <FitAssessmentSection />
+      <AutomationsLibrary />
       <CertificationsSection />
       <AchievementsSection />
       <ContactSection />

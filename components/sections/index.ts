@@ -6,7 +6,7 @@ export { CertificationsSection } from "./CertificationsSection";
 export { ContactSection } from "./ContactSection";
 export { EducationSection } from "./EducationSection";
 export { ExperienceSection } from "./ExperienceSection";
-export { FitAssessmentSection } from "./FitAssessmentSection";
+export { AutomationsLibrary } from "./AutomationsLibrary";
 export { HeroSection } from "./HeroSection";
 export { ProjectsSection } from "./ProjectsSection";
 export { SkillsSection } from "./SkillsSection";

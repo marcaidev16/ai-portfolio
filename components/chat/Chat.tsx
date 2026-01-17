@@ -8,7 +8,7 @@ import { useSidebar } from "../ui/sidebar";
 import { useUser } from "@clerk/nextjs";
 import { ChatAuthModal } from "./ChatAuthModal";
 import { Button } from "@/components/ui/button";
-import { Lock, Loader2 } from "lucide-react";
+import { Lock, Loader2, Crown, Infinity, MessageSquare, Sparkles, Check } from "lucide-react";
 
 export function Chat({
   profile,
@@ -19,54 +19,15 @@ export function Chat({
   const { isSignedIn } = useUser();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [rateLimitReached, setRateLimitReached] = useState(false);
-  const [isLoadingUsage, setIsLoadingUsage] = useState(true);
   const [messageUsage, setMessageUsage] = useState<{
     remaining: number;
     limit: number;
     allowed: boolean;
-  } | null>(null);
-
-  // Fetch initial message usage
-  useEffect(() => {
-    const fetchUsage = async () => {
-      setIsLoadingUsage(true);
-      try {
-        const usage = await getMessageUsage();
-        setMessageUsage(usage);
-        // Mark if already at limit, but don't auto-show modal
-        if (!usage.allowed) {
-          setRateLimitReached(true);
-        }
-      } catch (error) {
-        console.error("Error fetching message usage:", error);
-        // Set default values on error
-        setMessageUsage({
-          remaining: isSignedIn ? 10 : 3,
-          limit: isSignedIn ? 10 : 3,
-          allowed: true,
-        });
-      } finally {
-        setIsLoadingUsage(false);
-      }
-    };
-
-    fetchUsage();
-    // Reset rate limit state when auth state changes
-    setRateLimitReached(false);
-  }, [isSignedIn]);
-
-  // Reset rate limit state when sidebar opens
-  // This allows users to retry or navigate away from blocked state
-  const { open, openMobile, isMobile } = useSidebar();
-  const isSidebarOpen = isMobile ? openMobile : open;
-
-  useEffect(() => {
-    // When sidebar closes, reset the rate limit reached state
-    // This prevents the app from staying blocked
-    if (!isSidebarOpen) {
-      setRateLimitReached(false);
-    }
-  }, [isSidebarOpen]);
+  }>({
+    remaining: isSignedIn ? 5 : 3,  // 5 for authenticated free users, 3 for guests
+    limit: isSignedIn ? 5 : 3,
+    allowed: true,
+  });
 
   // Handle session creation with error handling
   const handleCreateSession = useCallback(async () => {
@@ -219,38 +180,80 @@ export function Chat({
 
   if (rateLimitReached && isSignedIn) {
     return (
-      <>
-        <div className="h-full w-full flex flex-col items-center justify-center p-6 text-center">
-          <div className="max-w-md space-y-6">
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-500/10">
-              <Lock className="h-8 w-8 text-blue-500" />
+      <div className="flex items-center justify-center h-full p-6">
+        <div className="max-w-md w-full space-y-6 text-center">
+          <div className="space-y-2">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">
+              <Lock className="h-8 w-8 text-destructive" />
             </div>
-            <div className="space-y-2">
-              <h3 className="text-xl font-semibold">Límite diario alcanzado</h3>
-              <p className="text-muted-foreground">
-                Has usado tus {messageUsage?.limit || 10} mensajes de hoy.
+            <h2 className="text-2xl font-bold">Límite diario alcanzado</h2>
+            <p className="text-muted-foreground">
+              Has usado tus {messageUsage.limit} mensajes de hoy.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Tu límite se restablecerá a la medianoche.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-xl bg-card/50 backdrop-blur-sm border border-primary/20 space-y-4">
+            <div className="flex items-center justify-center gap-2">
+              <Sparkles className="h-5 w-5 text-primary" />
+              <h3 className="text-lg font-semibold">Demo de Expertise Técnico</h3>
+            </div>
+
+            <p className="text-sm text-muted-foreground">
+              Este es un proyecto de demostración para mostrar integración de:
+            </p>
+
+            <ul className="text-sm space-y-2 text-left">
+              <li className="flex items-center gap-2">
+                <Check className="h-4 w-4 text-primary flex-shrink-0" />
+                <span>Rate limiting con Upstash Redis</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="h-4 w-4 text-primary flex-shrink-0" />
+                <span>Autenticación con Clerk</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="h-4 w-4 text-primary flex-shrink-0" />
+                <span>Billing & Subscriptions</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="h-4 w-4 text-primary flex-shrink-0" />
+                <span>Chat AI con OpenAI</span>
+              </li>
+            </ul>
+
+            <div className="pt-2 border-t border-border/50">
+              <p className="text-sm font-medium text-primary">
+                Plan Premium: 20 mensajes/día
               </p>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Tu límite se restablecerá a la <span className="font-semibold">medianoche</span>.
-            </p>
-            <Button
-              size="lg"
-              className="w-full"
-              onClick={() => setShowAuthModal(true)}
-            >
-              Ver planes premium
-            </Button>
           </div>
-        </div>
 
-        <ChatAuthModal
-          open={showAuthModal}
-          onOpenChange={setShowAuthModal}
-          messageLimit={messageUsage?.limit || 10}
-          isGuest={false}
-        />
-      </>
+          <Button
+            onClick={() => {
+              window.location.href = '/billing';
+            }}
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 text-lg"
+            size="lg"
+          >
+            <Sparkles className="mr-2 h-5 w-5" />
+            Ver Plan Premium
+          </Button>
+
+          <Button
+            onClick={() => {
+              setRateLimitReached(false);
+              toggleSidebar();
+            }}
+            variant="ghost"
+            className="w-full"
+          >
+            Cerrar
+          </Button>
+        </div>
+      </div>
     );
   }
 
