@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ProgressiveBlur } from "@/components/ui/progressive-blur";
-import { Bot, Zap, TrendingUp, Layers, Video, Mail, Search, Share2, PenTool, Database, ExternalLink } from "lucide-react";
+import { Bot, Zap, TrendingUp, Layers, Video, Mail, Search, Share2, PenTool, Database, ExternalLink, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 // Automation Data with real Notion links
 const AUTOMATIONS = [
@@ -153,21 +153,16 @@ export function AutomationsLibrary() {
                         </Table>
                     </ScrollArea>
 
-                    {/* Magic UI Progressive Blur at the bottom - POINTER EVENTS NONE IS CRITICAL HERE */}
-                    <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none z-20">
-                        <ProgressiveBlur
-                            className="absolute inset-0"
-                            direction="bottom"
-                            blurIntensity={4}
-                        />
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none z-20" />
+                    {/* CSS Gradient Fade - Robust & Pixel Perfect: Pure Black from-[#09090b] */}
+                    <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#09090b] via-[#09090b]/80 to-transparent pointer-events-none z-20" />
 
-                    {/* CTA Overlay on the blurred area */}
-                    <div className="absolute bottom-8 left-0 right-0 z-30 flex justify-center pointer-events-none">
-                        <div className="bg-white/10 backdrop-blur-md border border-white/10 px-6 py-2 rounded-full text-white text-sm font-medium animate-pulse">
-                            Ready to deploy
-                        </div>
+                    {/* CTA Overlay on the gradient area */}
+                    <div className="absolute bottom-10 left-0 right-0 z-30 flex justify-center pointer-events-auto">
+                        <Link href="#contact" className="group">
+                            <div className="bg-white/5 backdrop-blur-md border border-white/10 px-8 py-3 rounded-full text-white text-sm font-medium shadow-lg hover:bg-white/10 transition-all duration-500 hover:scale-105 flex items-center gap-2">
+                                Customize for my business <ArrowRight className="w-4 h-4 text-purple-400 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                        </Link>
                     </div>
                 </div>
             </div>
